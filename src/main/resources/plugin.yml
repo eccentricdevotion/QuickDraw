@@ -1,0 +1,7 @@
+author: eccentric_nz
+description: Be a like a gunslinging cowboy and be the quickest on the draw.
+main: me.eccentric_nz.plugins.quickdraw.Quickdraw
+name: QuickDraw
+startup: postworld
+dev-url: http://dev.bukkit.org/server-mods/quickdraw/
+version: '1.0'
