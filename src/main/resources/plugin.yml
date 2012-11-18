@@ -12,7 +12,7 @@ permissions:
     description: Allow players to participate in QuickDraw challenges.
 commands:
   quickdraw:
-    aliases: [qd]
+    aliases: [qd,cb,cowboy]
     permissions: quickdraw.draw
     description: View the QuickDraw best times.
-    usage: /<command> [me|all]
+    usage: /<command> [invite|accept|stats] [player] [money amount]
