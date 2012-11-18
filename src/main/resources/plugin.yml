@@ -5,7 +5,7 @@ name: QuickDraw
 startup: postworld
 dev-url: http://dev.bukkit.org/server-mods/quickdraw/
 version: '1.0'
-depend: [Vault]
+soft-depend: [Vault]
 permissions:
   quickdraw.draw:
     default: op
