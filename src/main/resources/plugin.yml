@@ -5,3 +5,14 @@ name: QuickDraw
 startup: postworld
 dev-url: http://dev.bukkit.org/server-mods/quickdraw/
 version: '1.0'
+depend: [Vault]
+permissions:
+  quickdraw.draw:
+    default: op
+    description: Allow players to participate in QuickDraw challenges.
+commands:
+  quickdraw:
+    aliases: [qd]
+    permissions: quickdraw.draw
+    description: View the QuickDraw best times.
+    usage: /<command> [me|all]
