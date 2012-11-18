@@ -1,1 +1,3 @@
 use_economy: true
+invite_distance: 10
+draw_distance: 5
