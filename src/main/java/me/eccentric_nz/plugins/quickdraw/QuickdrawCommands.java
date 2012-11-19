@@ -104,7 +104,7 @@ public class QuickdrawCommands implements CommandExecutor {
                     final String challengerNameStr = plugin.invites.get(player.getName());
                     final Player challenger = plugin.getServer().getPlayer(challengerNameStr);
                     // put challenger in list
-                    plugin.challengers.add(challengerNameStr);
+                    plugin.challengers.put(challengerNameStr,player.getName());
                     // get challengers location
                     Location cLoc = challenger.getLocation();
                     // get direction challenger is facing

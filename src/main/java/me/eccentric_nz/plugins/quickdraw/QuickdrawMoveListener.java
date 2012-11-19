@@ -14,7 +14,7 @@ public class QuickdrawMoveListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (plugin.invites.containsKey(event.getPlayer().getName()) || plugin.challengers.contains(event.getPlayer().getName())) {
+        if (plugin.invites.containsKey(event.getPlayer().getName()) || plugin.challengers.containsKey(event.getPlayer().getName())) {
             event.setTo(event.getFrom());
         }
     }
