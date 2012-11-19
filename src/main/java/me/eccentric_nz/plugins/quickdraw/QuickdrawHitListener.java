@@ -1,5 +1,7 @@
 package me.eccentric_nz.plugins.quickdraw;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -18,10 +20,18 @@ public class QuickdrawHitListener implements Listener {
     public void onHit(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
             if (event.getDamager() instanceof Snowball) {
-                Player p = (Player) event.getEntity();
-                if (plugin.invites.containsKey(p.getName())) {
-                    long systime = System.currentTimeMillis();
-                    plugin.hittime.put(p.getName(), systime);
+                Snowball snowball = (Snowball) event.getDamager();
+                LivingEntity shooter = snowball.getShooter();
+                if (shooter instanceof Player) {
+                    Player hitplayer = (Player) event.getEntity();
+                    Player throwplayer = (Player) shooter;
+                    if (plugin.invites.containsKey(hitplayer.getName()) || plugin.challengers.containsKey(hitplayer.getName())) {
+                        plugin.debug(hitplayer.getName() + " was hit by a snowball thrown by " + throwplayer.getName() + "!");
+                        long systime = System.currentTimeMillis();
+                        if (plugin.invites.get(hitplayer.getName()).equalsIgnoreCase(throwplayer.getName()) || plugin.challengers.get(hitplayer.getName()).equalsIgnoreCase(throwplayer.getName())) {
+                            plugin.hittime.put(throwplayer.getName(), systime);
+                        }
+                    }
                 }
             }
         }
