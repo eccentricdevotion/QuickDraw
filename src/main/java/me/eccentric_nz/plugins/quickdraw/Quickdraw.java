@@ -7,9 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,11 +23,15 @@ public class Quickdraw extends JavaPlugin implements Listener {
     protected static Quickdraw plugin;
     public static HashMap<String, ItemStack[]> invents = new HashMap<String, ItemStack[]>();
     HashMap<String, String> invites = new HashMap<String, String>();
-    List<String> challengers = new ArrayList<String>();
+    HashMap<String, String> challengers = new HashMap<String, String>();
     HashMap<String, Long> drawtime = new HashMap<String, Long>();
     HashMap<String, Long> hittime = new HashMap<String, Long>();
     private QuickdrawCommands commando;
     private QuickdrawConfig qdc;
+    PluginManager pm = Bukkit.getServer().getPluginManager();
+    QuickdrawThrowListener throwListener = new QuickdrawThrowListener(this);
+    QuickdrawHitListener hitListener = new QuickdrawHitListener(this);
+    QuickdrawMoveListener moveListener = new QuickdrawMoveListener(this);
     public int invdist;
 
     @Override
@@ -54,6 +60,9 @@ public class Quickdraw extends JavaPlugin implements Listener {
             debug("Connection and Tables Error: " + e);
         }
 
+        pm.registerEvents(hitListener, this);
+        pm.registerEvents(throwListener, this);
+        pm.registerEvents(moveListener, this);
         commando = new QuickdrawCommands(plugin);
         getCommand("quickdraw").setExecutor(commando);
 
