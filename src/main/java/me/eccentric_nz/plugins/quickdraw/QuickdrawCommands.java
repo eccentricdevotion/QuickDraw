@@ -9,6 +9,7 @@ import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -96,7 +97,7 @@ public class QuickdrawCommands implements CommandExecutor {
                         Player ip = plugin.getServer().getPlayer(args[1]);
                         Location iLoc = ip.getLocation();
                         Location cLoc = player.getLocation();
-                        if (!QuickdrawConstants.inLocation(cLoc,iLoc)) {
+                        if (!inLocation(cLoc,iLoc)) {
                             player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "You must be within "+plugin.getConfig().getInt("invite_distance")+" blocks of the player you want to invite!");
                             return true;
                         }
@@ -206,6 +207,7 @@ public class QuickdrawCommands implements CommandExecutor {
                     String challengerNameStr = plugin.invites.get(pNameString);
                     Player challenger = plugin.getServer().getPlayer(challengerNameStr);
                     challenger.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + pNameString + " declined your Quickdraw challenge because "+QuickdrawConstants.insults[r.nextInt(QuickdrawConstants.insults.length)]+"!");
+                    return true;
                 }
                 if (args[0].equalsIgnoreCase("restore")) {
                     if (!(sender instanceof Player)) {
@@ -235,5 +237,29 @@ public class QuickdrawCommands implements CommandExecutor {
             }
         }
         return false;
+    }
+    public boolean inLocation(Location a, Location b) {
+        int dist = plugin.getConfig().getInt("invite_distance");
+        int xMin = a.getBlockX() - dist;
+        int xMax = a.getBlockX() + dist;
+        int zMin = a.getBlockZ() - dist;
+        int zMax = a.getBlockZ() + dist;
+        World world = a.getWorld();
+        if (b.getWorld() != world) {
+            return false;
+        }
+        if (b.getBlockX() < xMin) {
+            return false;
+        }
+        if (b.getBlockX() > xMax) {
+            return false;
+        }
+        if (b.getBlockZ() < zMin) {
+            return false;
+        }
+        if (b.getBlockZ() > zMax) {
+            return false;
+        }
+        return true;
     }
 }

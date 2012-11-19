@@ -29,7 +29,8 @@ public class QuickdrawConstants {
         }
         return rightangle;
     }
-    public static String[] insults = {"they didn't have manners enough to carry guts to a bear",
+    public static String[] insults = {
+        "they didn't have manners enough to carry guts to a bear",
         "they couldn't hit a bull's rump with a handful of banjos",
         "they were as drunk as a fiddler's clerk",
         "they were as nervous as a long-tailed cat in a room full of rocking chairs",
@@ -49,29 +50,6 @@ public class QuickdrawConstants {
         "they had a ten dollar Stetson on a five-cent head",
         "they didn't have nuthin' under their hat but hair",
         "they wuz crazy enough to eat the devil with horns on",
-        "they couldn't track a bed-wagon through a bog hole"};
-
-    public static boolean inLocation(Location a, Location b) {
-        int xMin = Math.min(a.getBlockX(), a.getBlockX() - 10);
-        int xMax = Math.max(a.getBlockX(), a.getBlockX() + 10);
-        int zMin = Math.min(a.getBlockZ(), a.getBlockZ());
-        int zMax = Math.max(a.getBlockZ(), a.getBlockZ());
-        World world = a.getWorld();
-        if (b.getWorld() != world) {
-            return false;
-        }
-        if (b.getBlockX() < xMin) {
-            return false;
-        }
-        if (b.getBlockX() > xMax) {
-            return false;
-        }
-        if (b.getBlockZ() < zMin) {
-            return false;
-        }
-        if (b.getBlockZ() > zMax) {
-            return false;
-        }
-        return true;
-    }
+        "they couldn't track a bed-wagon through a bog hole"
+    };
 }
