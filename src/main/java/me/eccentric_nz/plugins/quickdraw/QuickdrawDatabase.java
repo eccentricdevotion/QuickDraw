@@ -2,7 +2,6 @@ package me.eccentric_nz.plugins.quickdraw;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -36,28 +35,6 @@ public class QuickdrawDatabase {
             statement.close();
         } catch (SQLException e) {
             plugin.debug("Create table error: " + e);
-        }
-    }
-
-    public ResultSet getRecords(String query) {
-        ResultSet rs = null;
-        try {
-            statement = connection.createStatement();
-            rs = statement.executeQuery(query);
-            statement.close();
-        } catch (SQLException e) {
-            plugin.debug("Could not get ResultSet for: " + query + " Error: " + e);
-        }
-        return rs;
-    }
-
-    public void doUpdate(String query) {
-        try {
-            statement = connection.createStatement();
-            statement.executeUpdate(query);
-            statement.close();
-        } catch (SQLException e) {
-            plugin.debug("Could not do update/insert for: " + query + " Error: " + e);
         }
     }
 
