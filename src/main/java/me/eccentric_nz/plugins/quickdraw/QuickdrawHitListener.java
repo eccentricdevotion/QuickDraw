@@ -34,9 +34,9 @@ public class QuickdrawHitListener implements Listener {
                     String tNameStr = throwplayer.getName();
                     if (plugin.accepted.containsKey(hNameStr) || plugin.challengers.containsKey(hNameStr)) {
                         plugin.debug(hNameStr + " was hit by a snowball thrown by " + tNameStr + "!");
-                        long systime = System.currentTimeMillis();
+                        long nanotime = System.nanoTime();
                         if (tNameStr.equalsIgnoreCase(plugin.accepted.get(hNameStr)) || tNameStr.equalsIgnoreCase(plugin.challengers.get(hNameStr))) {
-                            plugin.hittime.put(tNameStr, systime);
+                            plugin.hittime.put(tNameStr, nanotime);
                             long time = plugin.hittime.get(tNameStr) - plugin.drawtime.get(tNameStr);
                             try {
                                 Connection connection = service.getConnection();
@@ -55,7 +55,10 @@ public class QuickdrawHitListener implements Listener {
                             } catch (SQLException e) {
                                 plugin.debug("Could not get players inventory");
                             }
-                            throwplayer.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Your time against " + hNameStr + " was " + time / 1000 + " seconds");
+                            double seconds = (double)time / 1000000000.0;
+                            throwplayer.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Your time against " + hNameStr + " was " + seconds + " seconds");
+                            plugin.drawtime.remove(tNameStr);
+                            plugin.hittime.remove(tNameStr);
                             if (plugin.challengers.containsKey(hNameStr)) {
                                 plugin.challengers.remove(hNameStr);
                             }

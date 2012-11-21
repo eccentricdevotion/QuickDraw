@@ -196,9 +196,9 @@ public class QuickdrawCommands implements CommandExecutor {
                             // add snowball to random slot in players inventory
                             challenger.getInventory().setItem(r1, is);
                             player.getInventory().setItem(r2, is);
-                            long systime = System.currentTimeMillis();
-                            plugin.drawtime.put(player.getName(), systime);
-                            plugin.drawtime.put(challengerNameStr, systime);
+                            long nanotime = System.nanoTime();
+                            plugin.drawtime.put(player.getName(), nanotime);
+                            plugin.drawtime.put(challengerNameStr, nanotime);
                         }
                     }, 80L);
                 }
