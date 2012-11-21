@@ -55,7 +55,7 @@ public class QuickdrawHitListener implements Listener {
                             } catch (SQLException e) {
                                 plugin.debug("Could not get players inventory");
                             }
-                            double seconds = (double)time / 1000000000.0;
+                            double seconds = (double) time / 1000000000.0;
                             throwplayer.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Your time against " + hNameStr + " was " + seconds + " seconds");
                             plugin.drawtime.remove(tNameStr);
                             plugin.hittime.remove(tNameStr);

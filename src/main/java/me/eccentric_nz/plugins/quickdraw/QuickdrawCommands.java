@@ -50,7 +50,7 @@ public class QuickdrawCommands implements CommandExecutor {
                                 player.sendMessage(ChatColor.GREEN + "Your top 5 fastest draws");
                                 int i = 1;
                                 while (rsPlayer.next()) {
-                                    float t1 = rsPlayer.getInt("time") / 1000;
+                                    double t1 = (double) rsPlayer.getInt("time") / 1000000000.0;
                                     player.sendMessage(i + ". " + t1 + " seconds - vs " + rsPlayer.getString("versus"));
                                     i++;
                                 }
@@ -62,7 +62,7 @@ public class QuickdrawCommands implements CommandExecutor {
                             sender.sendMessage(ChatColor.AQUA + "The top 10 fastest draws");
                             int j = 1;
                             while (rsAll.next()) {
-                                float t2 = rsAll.getInt("time") / 1000;
+                                double t2 = (double) rsAll.getInt("time") / 1000000000.0;
                                 sender.sendMessage(j + ". " + t2 + " seconds - " + rsAll.getString("player") + " vs " + rsAll.getString("versus"));
                                 j++;
                             }
