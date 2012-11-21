@@ -24,6 +24,7 @@ public class Quickdraw extends JavaPlugin implements Listener {
     public static HashMap<String, ItemStack[]> invents = new HashMap<String, ItemStack[]>();
     HashMap<String, String> invites = new HashMap<String, String>();
     HashMap<String, String> challengers = new HashMap<String, String>();
+    HashMap<String, String> accepted = new HashMap<String, String>();
     HashMap<String, Long> drawtime = new HashMap<String, Long>();
     HashMap<String, Long> hittime = new HashMap<String, Long>();
     private QuickdrawCommands commando;
