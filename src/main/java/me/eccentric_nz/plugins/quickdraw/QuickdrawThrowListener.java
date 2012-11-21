@@ -64,7 +64,7 @@ public class QuickdrawThrowListener implements Listener {
                                 plugin.accepted.remove(pNameStr);
                             }
                         }
-                    }, 600L);
+                    }, 200L);
                 }
             }
         }
