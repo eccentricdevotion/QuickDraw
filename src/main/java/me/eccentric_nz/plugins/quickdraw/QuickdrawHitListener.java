@@ -32,10 +32,10 @@ public class QuickdrawHitListener implements Listener {
                     Player throwplayer = (Player) shooter;
                     String hNameStr = hitplayer.getName();
                     String tNameStr = throwplayer.getName();
-                    if (plugin.invites.containsKey(hNameStr) || plugin.challengers.containsKey(hNameStr)) {
+                    if (plugin.accepted.containsKey(hNameStr) || plugin.challengers.containsKey(hNameStr)) {
                         plugin.debug(hNameStr + " was hit by a snowball thrown by " + tNameStr + "!");
                         long systime = System.currentTimeMillis();
-                        if (tNameStr.equalsIgnoreCase(plugin.invites.get(hNameStr)) || tNameStr.equalsIgnoreCase(plugin.challengers.get(hNameStr))) {
+                        if (tNameStr.equalsIgnoreCase(plugin.accepted.get(hNameStr)) || tNameStr.equalsIgnoreCase(plugin.challengers.get(hNameStr))) {
                             plugin.hittime.put(tNameStr, systime);
                             long time = plugin.hittime.get(tNameStr) - plugin.drawtime.get(tNameStr);
                             try {
@@ -59,8 +59,8 @@ public class QuickdrawHitListener implements Listener {
                             if (plugin.challengers.containsKey(hNameStr)) {
                                 plugin.challengers.remove(hNameStr);
                             }
-                            if (plugin.invites.containsKey(hNameStr)) {
-                                plugin.invites.remove(hNameStr);
+                            if (plugin.accepted.containsKey(hNameStr)) {
+                                plugin.accepted.remove(hNameStr);
                             }
                         }
                     }

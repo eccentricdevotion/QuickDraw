@@ -30,7 +30,7 @@ public class QuickdrawThrowListener implements Listener {
             if (shooter instanceof Player) {
                 final Player p = (Player) shooter;
                 final String pNameStr = p.getName();
-                if (plugin.challengers.containsKey(pNameStr) || plugin.invites.containsKey(pNameStr)) {
+                if (plugin.challengers.containsKey(pNameStr) || plugin.accepted.containsKey(pNameStr)) {
                     // a quick draw challenge has started
                     plugin.debug("A quick draw challenge has started...");
                     // if after 30 seconds a hit has not been made then restore inventory and remove player from HashMap
@@ -38,7 +38,7 @@ public class QuickdrawThrowListener implements Listener {
                         @Override
                         public void run() {
                             plugin.debug("Closing quick draw challenge...");
-                            if (plugin.challengers.containsKey(pNameStr) || plugin.invites.containsKey(pNameStr)) {
+                            if (plugin.challengers.containsKey(pNameStr) || plugin.accepted.containsKey(pNameStr)) {
                                 try {
                                     Connection connection = service.getConnection();
                                     Statement statement = connection.createStatement();
@@ -59,9 +59,9 @@ public class QuickdrawThrowListener implements Listener {
                                 plugin.debug("The challenger missed...");
                                 plugin.challengers.remove(pNameStr);
                             }
-                            if (plugin.invites.containsKey(pNameStr)) {
+                            if (plugin.accepted.containsKey(pNameStr)) {
                                 plugin.debug("The invited missed...");
-                                plugin.invites.remove(pNameStr);
+                                plugin.accepted.remove(pNameStr);
                             }
                         }
                     }, 600L);

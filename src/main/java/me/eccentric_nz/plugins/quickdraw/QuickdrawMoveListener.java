@@ -16,7 +16,7 @@ public class QuickdrawMoveListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         // maybe need plugin.accepted HashMap ?
-        if (plugin.invites.containsKey(event.getPlayer().getName()) || plugin.challengers.containsKey(event.getPlayer().getName())) {
+        if (plugin.accepted.containsKey(event.getPlayer().getName()) || plugin.challengers.containsKey(event.getPlayer().getName())) {
             if (event.getFrom().getX() != event.getTo().getX() || event.getFrom().getY() != event.getTo().getY() || event.getFrom().getZ() != event.getTo().getZ()) {
                 Location loc = event.getFrom();
                 loc.setPitch(event.getTo().getPitch());
