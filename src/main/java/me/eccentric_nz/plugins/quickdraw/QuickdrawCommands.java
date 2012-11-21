@@ -97,8 +97,8 @@ public class QuickdrawCommands implements CommandExecutor {
                         Player ip = plugin.getServer().getPlayer(args[1]);
                         Location iLoc = ip.getLocation();
                         Location cLoc = player.getLocation();
-                        if (!inLocation(cLoc,iLoc)) {
-                            player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "You must be within "+plugin.getConfig().getInt("invite_distance")+" blocks of the player you want to invite!");
+                        if (!inLocation(cLoc, iLoc)) {
+                            player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "You must be within " + plugin.getConfig().getInt("invite_distance") + " blocks of the player you want to invite!");
                             return true;
                         }
                         ip.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + player.getName() + " has challenged you to a QuickDraw. Type: " + ChatColor.BLUE + "/quickdraw accept" + ChatColor.RESET + " to join in the gunslingin' fun!");
@@ -119,7 +119,7 @@ public class QuickdrawCommands implements CommandExecutor {
                     // set up the game
                     final String challengerNameStr = plugin.invites.get(player.getName());
                     final Player challenger = plugin.getServer().getPlayer(challengerNameStr);
-
+                    plugin.invites.remove(player.getName());
                     // get challengers location
                     Location cLoc = challenger.getLocation();
                     // get direction challenger is facing
@@ -148,10 +148,19 @@ public class QuickdrawCommands implements CommandExecutor {
                             break;
                     }
                     plugin.debug("x: " + vx + ", z:" + vz);
-                    challenger.teleport(cLoc);
+                    final Location vLoc = new Location(cLoc.getWorld(), vx, cLoc.getY(), vz, vYaw, 0);
+                    challenger.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Teleporting your opponent into position...");
+                    player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Teleporting you into position...");
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                            player.teleport(vLoc);
+                        }
+                    }, 40L);
                     // put challenger in list
                     plugin.challengers.put(challengerNameStr, player.getName());
-                    Location vLoc = new Location(cLoc.getWorld(), vx, cLoc.getY(), vz, vYaw, 0);
+                    // put accpetor in list
+                    plugin.accepted.put(player.getName(), challengerNameStr);
                     // save then clear inventories
                     try {
                         Connection connection = service.getConnection();
@@ -206,7 +215,7 @@ public class QuickdrawCommands implements CommandExecutor {
                     }
                     String challengerNameStr = plugin.invites.get(pNameString);
                     Player challenger = plugin.getServer().getPlayer(challengerNameStr);
-                    challenger.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + pNameString + " declined your Quickdraw challenge because "+QuickdrawConstants.insults[r.nextInt(QuickdrawConstants.insults.length)]+"!");
+                    challenger.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + pNameString + " declined your Quickdraw challenge because " + QuickdrawConstants.insults[r.nextInt(QuickdrawConstants.insults.length)] + "!");
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("restore")) {
@@ -238,6 +247,7 @@ public class QuickdrawCommands implements CommandExecutor {
         }
         return false;
     }
+
     public boolean inLocation(Location a, Location b) {
         int dist = plugin.getConfig().getInt("invite_distance");
         int xMin = a.getBlockX() - dist;
