@@ -38,6 +38,7 @@ public class QuickdrawHitListener implements Listener {
                         if (tNameStr.equalsIgnoreCase(plugin.accepted.get(hNameStr)) || tNameStr.equalsIgnoreCase(plugin.challengers.get(hNameStr))) {
                             plugin.hittime.put(tNameStr, nanotime);
                             long time = plugin.hittime.get(tNameStr) - plugin.drawtime.get(tNameStr);
+                            plugin.quicktime.put(tNameStr, time);
                             try {
                                 Connection connection = service.getConnection();
                                 Statement statement = connection.createStatement();

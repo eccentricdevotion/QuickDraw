@@ -27,6 +27,8 @@ public class Quickdraw extends JavaPlugin implements Listener {
     HashMap<String, String> accepted = new HashMap<String, String>();
     HashMap<String, Long> drawtime = new HashMap<String, Long>();
     HashMap<String, Long> hittime = new HashMap<String, Long>();
+    HashMap<String, Long> quicktime = new HashMap<String, Long>();
+    HashMap<String, Double> purse = new HashMap<String, Double>();
     private QuickdrawCommands commando;
     private QuickdrawConfig qdc;
     PluginManager pm = Bukkit.getServer().getPluginManager();

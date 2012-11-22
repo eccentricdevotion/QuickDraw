@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -33,7 +34,8 @@ public class QuickdrawThrowListener implements Listener {
                 if (plugin.challengers.containsKey(pNameStr) || plugin.accepted.containsKey(pNameStr)) {
                     // a quick draw challenge has started
                     plugin.debug("A quick draw challenge has started...");
-                    // if after 30 seconds a hit has not been made then restore inventory and remove player from HashMap
+                    // if after (default) 10 seconds a hit has not been made then restore inventory and remove player from HashMap
+                    long unfreeze = plugin.getConfig().getLong("unfreeze_after_miss") * 20;
                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                         @Override
                         public void run() {
@@ -55,16 +57,49 @@ public class QuickdrawThrowListener implements Listener {
                                     plugin.debug("Could not get players inventory");
                                 }
                             }
+                            String accepted = "", challenger = "";
                             if (plugin.challengers.containsKey(pNameStr)) {
+                                accepted = plugin.challengers.get(pNameStr);
+                                challenger = pNameStr;
                                 plugin.debug("The challenger missed...");
                                 plugin.challengers.remove(pNameStr);
+                                plugin.quicktime.put(pNameStr, Long.MAX_VALUE);
                             }
                             if (plugin.accepted.containsKey(pNameStr)) {
+                                accepted = pNameStr;
+                                challenger = plugin.accepted.get(pNameStr);
                                 plugin.debug("The invited missed...");
                                 plugin.accepted.remove(pNameStr);
+                                plugin.quicktime.put(pNameStr, Long.MAX_VALUE);
+                            }
+                            if (plugin.quicktime.get(accepted) > plugin.quicktime.get(challenger)) {
+                                plugin.getServer().getPlayer(accepted).sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + challenger + " won!");
+                                plugin.getServer().getPlayer(challenger).sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + challenger + " won!");
+                                if (plugin.purse.containsKey(challenger) && plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
+                                    double d = plugin.purse.get(challenger);
+                                    EconomyResponse r = Quickdraw.economy.depositPlayer(challenger, d);
+                                    if (r.transactionSuccess()) {
+                                        plugin.getServer().getPlayer(challenger).sendMessage(String.format(QuickdrawConstants.MY_PLUGIN_NAME + "You won %s from the QuickDtaw challenge", Quickdraw.economy.format(r.amount)));
+                                    } else {
+                                        plugin.getServer().getPlayer(challenger).sendMessage(String.format("An error occured: %s", r.errorMessage));
+                                    }
+                                }
+                            }
+                            if (plugin.quicktime.get(accepted) < plugin.quicktime.get(challenger)) {
+                                plugin.getServer().getPlayer(accepted).sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + accepted + " won!");
+                                plugin.getServer().getPlayer(challenger).sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + accepted + " won!");
+                                if (plugin.purse.containsKey(challenger) && plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
+                                    double d = plugin.purse.get(challenger);
+                                    EconomyResponse r = Quickdraw.economy.depositPlayer(accepted, d);
+                                    if (r.transactionSuccess()) {
+                                        plugin.getServer().getPlayer(accepted).sendMessage(String.format(QuickdrawConstants.MY_PLUGIN_NAME + "You won %s from the QuickDtaw challenge", Quickdraw.economy.format(r.amount)));
+                                    } else {
+                                        plugin.getServer().getPlayer(accepted).sendMessage(String.format("An error occured: %s", r.errorMessage));
+                                    }
+                                }
                             }
                         }
-                    }, 200L);
+                    }, unfreeze);
                 }
             }
         }

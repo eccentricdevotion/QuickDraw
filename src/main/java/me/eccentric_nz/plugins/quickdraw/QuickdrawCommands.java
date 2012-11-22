@@ -101,8 +101,13 @@ public class QuickdrawCommands implements CommandExecutor {
                             player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "You must be within " + plugin.getConfig().getInt("invite_distance") + " blocks of the player you want to invite!");
                             return true;
                         }
+                        if (plugin.getConfig().getBoolean("use_economy") && args.length > 2) {
+                            double purse = Double.parseDouble(args[2]);
+                            plugin.purse.put(player.getName(), purse);
+                        }
                         ip.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + player.getName() + " has challenged you to a QuickDraw. Type: " + ChatColor.BLUE + "/quickdraw accept" + ChatColor.RESET + " to join in the gunslingin' fun!");
                         plugin.invites.put(ip.getName(), player.getName());
+                        player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Inviting player...");
                     }
                     return true;
                 }
@@ -214,6 +219,9 @@ public class QuickdrawCommands implements CommandExecutor {
                         return true;
                     }
                     String challengerNameStr = plugin.invites.get(pNameString);
+                    if (plugin.purse.containsKey(challengerNameStr)) {
+                        plugin.purse.remove(challengerNameStr);
+                    }
                     Player challenger = plugin.getServer().getPlayer(challengerNameStr);
                     challenger.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + pNameString + " declined your Quickdraw challenge because " + QuickdrawConstants.insults[r.nextInt(QuickdrawConstants.insults.length)] + "!");
                     return true;
