@@ -1,3 +1,4 @@
 use_economy: true
 invite_distance: 10
 draw_distance: 5
+unfreeze_after_miss: 10
