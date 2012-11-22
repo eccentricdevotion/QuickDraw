@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
 import java.util.Set;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -50,7 +51,7 @@ public class QuickdrawCommands implements CommandExecutor {
                                 player.sendMessage(ChatColor.GREEN + "Your top 5 fastest draws");
                                 int i = 1;
                                 while (rsPlayer.next()) {
-                                    double t1 = (double) rsPlayer.getInt("time") / 1000000000.0;
+                                    double t1 = rsPlayer.getDouble("time") / 1000000000.0;
                                     player.sendMessage(i + ". " + t1 + " seconds - vs " + rsPlayer.getString("versus"));
                                     i++;
                                 }
@@ -62,7 +63,7 @@ public class QuickdrawCommands implements CommandExecutor {
                             sender.sendMessage(ChatColor.AQUA + "The top 10 fastest draws");
                             int j = 1;
                             while (rsAll.next()) {
-                                double t2 = (double) rsAll.getInt("time") / 1000000000.0;
+                                double t2 = rsAll.getDouble("time") / 1000000000.0;
                                 sender.sendMessage(j + ". " + t2 + " seconds - " + rsAll.getString("player") + " vs " + rsAll.getString("versus"));
                                 j++;
                             }
@@ -101,15 +102,21 @@ public class QuickdrawCommands implements CommandExecutor {
                             player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "You must be within " + plugin.getConfig().getInt("invite_distance") + " blocks of the player you want to invite!");
                             return true;
                         }
+                        String amount = "";
                         if (plugin.getConfig().getBoolean("use_economy") && args.length > 2) {
                             double purse = Double.parseDouble(args[2]);
+                            if (Quickdraw.economy.getBalance(player.getName()) < purse) {
+                                player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "You don't have enough money to make that challenge!");
+                                return false;
+                            }
                             plugin.purse.put(player.getName(), purse);
+                            amount = " for " + Quickdraw.economy.format(purse);
                         }
-                        ip.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + player.getName() + " has challenged you to a QuickDraw. Type: " + ChatColor.BLUE + "/quickdraw accept" + ChatColor.RESET + " to join in the gunslingin' fun!");
+                        ip.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + player.getName() + " has challenged you to a QuickDraw" + amount + ". Type: " + ChatColor.BLUE + "/quickdraw accept" + ChatColor.RESET + " to join in the gunslingin' fun!");
                         plugin.invites.put(ip.getName(), player.getName());
                         player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Inviting player...");
+                        return true;
                     }
-                    return true;
                 }
                 if (args[0].equalsIgnoreCase("accept")) {
                     if (!(sender instanceof Player)) {
@@ -117,14 +124,15 @@ public class QuickdrawCommands implements CommandExecutor {
                         return true;
                     }
                     final Player player = (Player) sender;
-                    if (!plugin.invites.containsKey(player.getName())) {
+                    final String pNameStr = player.getName();
+                    if (!plugin.invites.containsKey(pNameStr)) {
                         sender.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "You must be invited to QuickDraw challenge before you can accept!");
                         return true;
                     }
                     // set up the game
-                    final String challengerNameStr = plugin.invites.get(player.getName());
+                    final String challengerNameStr = plugin.invites.get(pNameStr);
                     final Player challenger = plugin.getServer().getPlayer(challengerNameStr);
-                    plugin.invites.remove(player.getName());
+                    plugin.invites.remove(pNameStr);
                     // get challengers location
                     Location cLoc = challenger.getLocation();
                     // get direction challenger is facing
@@ -163,9 +171,9 @@ public class QuickdrawCommands implements CommandExecutor {
                         }
                     }, 40L);
                     // put challenger in list
-                    plugin.challengers.put(challengerNameStr, player.getName());
+                    plugin.challengers.put(challengerNameStr, pNameStr);
                     // put accpetor in list
-                    plugin.accepted.put(player.getName(), challengerNameStr);
+                    plugin.accepted.put(pNameStr, challengerNameStr);
                     // save then clear inventories
                     try {
                         Connection connection = service.getConnection();
@@ -175,7 +183,7 @@ public class QuickdrawCommands implements CommandExecutor {
                         statement.executeUpdate(challegerQuery);
                         challenger.getInventory().clear();
                         String versusInv = QuickdrawInventory.toBase64(player.getInventory());
-                        String versusQuery = "INSERT INTO inventories (player, inventory) VALUES ('" + player.getName() + "','" + versusInv + "')";
+                        String versusQuery = "INSERT INTO inventories (player, inventory) VALUES ('" + pNameStr + "','" + versusInv + "')";
                         statement.executeUpdate(versusQuery);
                     } catch (SQLException e) {
                         plugin.debug("Could not save inventories");
@@ -187,25 +195,28 @@ public class QuickdrawCommands implements CommandExecutor {
                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                         @Override
                         public void run() {
-                            challenger.sendMessage("SET...");
-                            player.sendMessage("SET...");
+                            challenger.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "SET...");
+                            player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "SET...");
+                            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                                @Override
+                                public void run() {
+                                    challenger.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "DRAW!");
+                                    player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "DRAW!");
+                                    int r1 = r.nextInt(9);
+                                    int r2 = r.nextInt(9);
+                                    // add snowball to random slot in players inventory
+                                    challenger.getInventory().setItem(r1, is);
+                                    player.getInventory().setItem(r2, is);
+                                    long nanotime = System.nanoTime();
+                                    plugin.drawtime.put(pNameStr, nanotime);
+                                    plugin.drawtime.put(challengerNameStr, nanotime);
+                                    startDelayedEndCode(pNameStr);
+                                }
+                            }, 40L);
                         }
                     }, 40L);
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                        @Override
-                        public void run() {
-                            challenger.sendMessage("DRAW!");
-                            player.sendMessage("DRAW!");
-                            int r1 = r.nextInt(9);
-                            int r2 = r.nextInt(9);
-                            // add snowball to random slot in players inventory
-                            challenger.getInventory().setItem(r1, is);
-                            player.getInventory().setItem(r2, is);
-                            long nanotime = System.nanoTime();
-                            plugin.drawtime.put(player.getName(), nanotime);
-                            plugin.drawtime.put(challengerNameStr, nanotime);
-                        }
-                    }, 80L);
+
+                    return true;
                 }
                 if (args[0].equalsIgnoreCase("decline")) {
                     if (!(sender instanceof Player)) {
@@ -279,5 +290,10 @@ public class QuickdrawCommands implements CommandExecutor {
             return false;
         }
         return true;
+    }
+
+    public void startDelayedEndCode(String p) {
+        long unfreeze = (plugin.getConfig().getLong("unfreeze_after_miss") * 20) + 80L;
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new QuickdrawEndSchedule(plugin, p), unfreeze);
     }
 }
