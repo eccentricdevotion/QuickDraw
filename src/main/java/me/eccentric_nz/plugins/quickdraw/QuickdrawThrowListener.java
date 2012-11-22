@@ -79,7 +79,7 @@ public class QuickdrawThrowListener implements Listener {
                                     double d = plugin.purse.get(challenger);
                                     EconomyResponse r = Quickdraw.economy.depositPlayer(challenger, d);
                                     if (r.transactionSuccess()) {
-                                        plugin.getServer().getPlayer(challenger).sendMessage(String.format(QuickdrawConstants.MY_PLUGIN_NAME + "You won %s from the QuickDtaw challenge", Quickdraw.economy.format(r.amount)));
+                                        plugin.getServer().getPlayer(challenger).sendMessage(String.format(QuickdrawConstants.MY_PLUGIN_NAME + "You won %s from the QuickDraw challenge", Quickdraw.economy.format(r.amount)));
                                     } else {
                                         plugin.getServer().getPlayer(challenger).sendMessage(String.format("An error occured: %s", r.errorMessage));
                                     }
@@ -92,7 +92,7 @@ public class QuickdrawThrowListener implements Listener {
                                     double d = plugin.purse.get(challenger);
                                     EconomyResponse r = Quickdraw.economy.depositPlayer(accepted, d);
                                     if (r.transactionSuccess()) {
-                                        plugin.getServer().getPlayer(accepted).sendMessage(String.format(QuickdrawConstants.MY_PLUGIN_NAME + "You won %s from the QuickDtaw challenge", Quickdraw.economy.format(r.amount)));
+                                        plugin.getServer().getPlayer(accepted).sendMessage(String.format(QuickdrawConstants.MY_PLUGIN_NAME + "You won %s from the QuickDraw challenge", Quickdraw.economy.format(r.amount)));
                                     } else {
                                         plugin.getServer().getPlayer(accepted).sendMessage(String.format("An error occured: %s", r.errorMessage));
                                     }
