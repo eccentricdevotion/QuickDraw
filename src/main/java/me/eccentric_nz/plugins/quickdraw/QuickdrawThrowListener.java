@@ -41,6 +41,7 @@ public class QuickdrawThrowListener implements Listener {
                             if (!plugin.hittime.containsKey(pNameStr)) {
                                 if (plugin.challengers.containsKey(pNameStr) || plugin.accepted.containsKey(pNameStr)) {
                                     plugin.debug("Closing quick draw challenge...");
+                                    plugin.quicktime.put(pNameStr, Long.MAX_VALUE);
                                     try {
                                         Connection connection = service.getConnection();
                                         Statement statement = connection.createStatement();
