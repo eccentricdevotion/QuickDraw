@@ -37,6 +37,7 @@ public class QuickdrawHitListener implements Listener {
                         long nanotime = System.nanoTime();
                         plugin.hittime.put(throwerNameStr, nanotime);
                         long time = plugin.hittime.get(throwerNameStr) - plugin.drawtime.get(throwerNameStr);
+                        plugin.debug(throwerNameStr + ": " + time);
                         plugin.quicktime.put(throwerNameStr, time);
                         try {
                             Connection connection = service.getConnection();
@@ -58,7 +59,6 @@ public class QuickdrawHitListener implements Listener {
                         double seconds = (double) time / 1000000000.0;
                         throwplayer.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Your time against " + hitNameStr + " was " + seconds + " seconds");
                         plugin.drawtime.remove(throwerNameStr);
-                        plugin.hittime.remove(throwerNameStr);
                     }
                 }
             }
