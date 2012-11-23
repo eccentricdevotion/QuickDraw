@@ -115,15 +115,17 @@ public class QuickdrawCommands implements CommandExecutor {
                         ip.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + player.getName() + " has challenged you to a QuickDraw" + amount + ". Type: " + ChatColor.BLUE + "/quickdraw accept" + ChatColor.RESET + " to join in the gunslingin' fun!");
                         plugin.invites.put(ip.getName(), player.getName());
                         player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Inviting player...");
-                        long invite_timeout = plugin.getConfig().getInt("invite_timeout")*20;
+                        long invite_timeout = plugin.getConfig().getInt("invite_timeout") * 20;
                         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                        @Override
-                        public void run() {
-                            player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + player.getName() + "There was no response to your challenge!");
-                            plugin.invites.remove(ip.getName());
-                            plugin.purse.remove(player.getName());
-                        }
-                    }, invite_timeout);
+                            @Override
+                            public void run() {
+                                if (plugin.invites.containsKey(ip.getName())) {
+                                    player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "There was no response to your challenge!");
+                                    plugin.invites.remove(ip.getName());
+                                    plugin.purse.remove(player.getName());
+                                }
+                            }
+                        }, invite_timeout);
                         return true;
                     }
                 }
