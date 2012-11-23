@@ -1,4 +1,6 @@
 use_economy: true
 invite_distance: 10
+invite_timeout: 10
 draw_distance: 5
 unfreeze_after_miss: 10
+replay_if_draw: false
