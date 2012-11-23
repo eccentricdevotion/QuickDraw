@@ -33,8 +33,8 @@ public class QuickdrawThrowListener implements Listener {
                 if (plugin.challengers.containsKey(pNameStr) || plugin.accepted.containsKey(pNameStr)) {
                     // a quick draw challenge has started
                     plugin.debug("A quick draw challenge has started...");
-                    // if after (default) 10 seconds a hit has not been made then restore inventory and remove player from HashMap
-                    long unfreeze = plugin.getConfig().getLong("unfreeze_after_miss") * 20;
+                    // if after (default) 10 seconds a hit has not been made then restore inventory
+                    long unfreeze = plugin.getConfig().getLong("unfreeze_after_miss") * 18;
                     plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                         @Override
                         public void run() {
