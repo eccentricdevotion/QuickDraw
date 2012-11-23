@@ -15,14 +15,14 @@ public class QuickdrawEndSchedule implements Runnable {
     public void run() {
         String versus = "", challenger = "";
         // if one of the palyers missed...
-        if (plugin.challengers.containsKey(pNameStr)) {
+        if (plugin.drawtime.containsKey(pNameStr)) {
             plugin.debug("The challenger missed...");
             versus = plugin.challengers.get(pNameStr);
             challenger = pNameStr;
             plugin.challengers.remove(pNameStr);
             plugin.quicktime.put(pNameStr, Long.MAX_VALUE);
         }
-        if (plugin.accepted.containsKey(pNameStr)) {
+        if (plugin.drawtime.containsKey(pNameStr)) {
             versus = pNameStr;
             challenger = plugin.accepted.get(pNameStr);
             plugin.debug("The invited missed...");
@@ -66,7 +66,7 @@ public class QuickdrawEndSchedule implements Runnable {
             plugin.getServer().getPlayer(versus).sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "It was a draw!");
             plugin.getServer().getPlayer(challenger).sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "It was a draw!");
         }
-        // clear drawtime, hittime and quicktime
+        // clear accepted, challengers, drawtime, hittime and quicktime
         if (plugin.drawtime.containsKey(versus)) {
             plugin.drawtime.remove(versus);
         }
@@ -84,6 +84,12 @@ public class QuickdrawEndSchedule implements Runnable {
         }
         if (plugin.quicktime.containsKey(challenger)) {
             plugin.quicktime.remove(challenger);
+        }
+        if (plugin.accepted.containsKey(versus)) {
+            plugin.accepted.remove(versus);
+        }
+        if (plugin.challengers.containsKey(challenger)) {
+            plugin.challengers.remove(challenger);
         }
     }
 }
