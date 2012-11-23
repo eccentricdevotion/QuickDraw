@@ -28,7 +28,7 @@ public class QuickdrawCommands implements CommandExecutor {
 
     public QuickdrawCommands(Quickdraw plugin) {
         this.plugin = plugin;
-        HELP = ChatColor.GOLD + "[QuickDraw] So you want to be a gunslinging cowboy?" + ChatColor.RESET + "\nBefore you can invite a player to a QuickDraw challenge\nyou must be within " + plugin.getConfig().getInt("invite_distance") + " blocks of the player.\nWhen you are, you can then type the command: " + ChatColor.BLUE + "/quickdraw invite [player]" + ChatColor.RESET + "\nMore instructions to come";
+        HELP = ChatColor.GOLD + "[QuickDraw] So you want to be a gunslinging cowboy?" + ChatColor.RESET + "\nBefore you can invite a player to a QuickDraw challenge\nyou must be within " + plugin.getConfig().getInt("invite_distance") + " blocks of the player.\nWhen you are, you can then type the command: " + ChatColor.BLUE + "/quickdraw invite [player]" + ChatColor.RESET + "\nIf Vault and an economy plugin are enabled on the server, you can challenge a player for money with:\n" + ChatColor.BLUE + "/quickdraw invite [player] [amount]" + ChatColor.RESET + "\nA message will be sent to the invited player asking them whether they want to accept the challenge.\nTo accept a challenge, type: " + ChatColor.BLUE + "/quickdraw accept" + ChatColor.RESET + "\nOnce the player has accepted the challenge, they will be teleported into position,\n both players inventories will be saved and cleared, and the players will be prevented from moving.\nA short countdown will begin - READY, SET, DRAW! - and then a snowball will appear in a random hotkey slot.\nThe first player to throw the snowball and hit the other player is the QuickDraw winner.\nInventories and movement are restored, QuickDraw times are displayed, and prize money awarded when the match is over.\nYou can decline a QuickDraw inviation with the command: " + ChatColor.BLUE + "/quickdraw decline" + ChatColor.RESET + "\nor if no response is received within" + plugin.getConfig().getInt("invite_timeout") + " seconds the invitation will be cancelled.\n" + ChatColor.GOLD + "QuickDraw statistics" + ChatColor.RESET + "\nTo view QuickDraw statistics type the command: " + ChatColor.BLUE + "/quickdraw stats" + ChatColor.RESET + "Your best draws and the 10 alltime fastest draws will be displayed.\nIn the unlikely event that your inventory does not get restored, type: " + ChatColor.BLUE + "/quickdraw restore";
     }
 
     @Override
@@ -92,10 +92,10 @@ public class QuickdrawCommands implements CommandExecutor {
                     if (args.length < 2) {
                         return false;
                     }
-                    Player player = (Player) sender;
+                    final Player player = (Player) sender;
                     if (plugin.getServer().getPlayer(args[1]) != null) {
                         // get invited players location
-                        Player ip = plugin.getServer().getPlayer(args[1]);
+                        final Player ip = plugin.getServer().getPlayer(args[1]);
                         Location iLoc = ip.getLocation();
                         Location cLoc = player.getLocation();
                         if (!inLocation(cLoc, iLoc)) {
@@ -115,6 +115,15 @@ public class QuickdrawCommands implements CommandExecutor {
                         ip.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + player.getName() + " has challenged you to a QuickDraw" + amount + ". Type: " + ChatColor.BLUE + "/quickdraw accept" + ChatColor.RESET + " to join in the gunslingin' fun!");
                         plugin.invites.put(ip.getName(), player.getName());
                         player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Inviting player...");
+                        long invite_timeout = plugin.getConfig().getInt("invite_timeout")*20;
+                        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                            player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + player.getName() + "There was no response to your challenge!");
+                            plugin.invites.remove(ip.getName());
+                            plugin.purse.remove(player.getName());
+                        }
+                    }, invite_timeout);
                         return true;
                     }
                 }
@@ -293,7 +302,7 @@ public class QuickdrawCommands implements CommandExecutor {
     }
 
     public void startDelayedEndCode(String p) {
-        long unfreeze = (plugin.getConfig().getLong("unfreeze_after_miss") * 20) + 80L;
+        long unfreeze = (plugin.getConfig().getLong("unfreeze_after_miss") * 20) + 50L;
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new QuickdrawEndSchedule(plugin, p), unfreeze);
     }
 }
