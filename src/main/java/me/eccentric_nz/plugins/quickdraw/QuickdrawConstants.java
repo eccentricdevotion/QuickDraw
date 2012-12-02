@@ -1,7 +1,6 @@
 package me.eccentric_nz.plugins.quickdraw;
 
 import org.bukkit.Location;
-import org.bukkit.World;
 
 public class QuickdrawConstants {
 

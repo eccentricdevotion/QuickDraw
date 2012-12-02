@@ -40,7 +40,10 @@ public class QuickdrawConfig {
     private HashMap<String, String> loadConfigurables(HashMap<String, String> items) {
         items.put("use_economy", "true");
         items.put("invite_distance", "10");
+        items.put("invite_timeout", "20");
         items.put("draw_distance", "5");
+        items.put("unfreeze_after_miss", "10");
+        items.put("replay_if_draw", "false");
         items.put("debug", "false");
         return items;
     }

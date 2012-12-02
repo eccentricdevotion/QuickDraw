@@ -2,15 +2,11 @@ package me.eccentric_nz.plugins.quickdraw;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,7 +17,6 @@ public class Quickdraw extends JavaPlugin implements Listener {
     public static Permission permission = null;
     public static Economy economy = null;
     protected static Quickdraw plugin;
-    public static HashMap<String, ItemStack[]> invents = new HashMap<String, ItemStack[]>();
     HashMap<String, String> invites = new HashMap<String, String>();
     HashMap<String, String> challengers = new HashMap<String, String>();
     HashMap<String, String> accepted = new HashMap<String, String>();
@@ -35,7 +30,6 @@ public class Quickdraw extends JavaPlugin implements Listener {
     QuickdrawThrowListener throwListener = new QuickdrawThrowListener(this);
     QuickdrawHitListener hitListener = new QuickdrawHitListener(this);
     QuickdrawMoveListener moveListener = new QuickdrawMoveListener(this);
-    public int invdist;
 
     @Override
     public void onEnable() {
@@ -51,9 +45,6 @@ public class Quickdraw extends JavaPlugin implements Listener {
         this.saveDefaultConfig();
         qdc = new QuickdrawConfig(plugin);
         qdc.updateConfig();
-
-        invdist = getConfig().getInt("invite_distance");
-        debug(invdist);
 
         try {
             String path = getDataFolder() + File.separator + "QuickDraw.db";
@@ -83,12 +74,16 @@ public class Quickdraw extends JavaPlugin implements Listener {
             }
             setupPermissions();
         }
-
     }
 
     @Override
     public void onDisable() {
         this.saveConfig();
+        try {
+            service.connection.close();
+        } catch (Exception e) {
+            System.err.println(QuickdrawConstants.MY_PLUGIN_NAME + " Could not close database connection: " + e);
+        }
     }
 
     private boolean setupPermissions() {
@@ -105,22 +100,6 @@ public class Quickdraw extends JavaPlugin implements Listener {
             economy = economyProvider.getProvider();
         }
         return (economy != null);
-    }
-
-    public static void saveContents(Player player) {
-        if (!invents.containsKey(player.getName())) {
-            invents.put(player.getName(), player.getInventory().getContents());
-        } else if (invents.containsKey(player.getName())) {
-            return;
-        }
-    }
-
-    public static void retrieveContents(Player player) {
-        if (!invents.containsKey(player.getName())) {
-            return;
-        } else if (invents.containsKey(player.getName())) {
-            player.getInventory().setContents(invents.get(player.getName()));
-        }
     }
 
     public void debug(Object o) {

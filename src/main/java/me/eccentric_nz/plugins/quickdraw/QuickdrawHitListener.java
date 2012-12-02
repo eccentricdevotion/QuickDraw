@@ -37,7 +37,6 @@ public class QuickdrawHitListener implements Listener {
                         long nanotime = System.nanoTime();
                         plugin.hittime.put(throwerNameStr, nanotime);
                         long time = plugin.hittime.get(throwerNameStr) - plugin.drawtime.get(throwerNameStr);
-                        plugin.debug(throwerNameStr + ": " + time);
                         plugin.quicktime.put(throwerNameStr, time);
                         try {
                             Connection connection = service.getConnection();

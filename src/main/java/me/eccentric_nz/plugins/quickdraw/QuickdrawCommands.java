@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
 import java.util.Set;
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -103,7 +102,7 @@ public class QuickdrawCommands implements CommandExecutor {
                             return true;
                         }
                         String amount = "";
-                        if (plugin.getConfig().getBoolean("use_economy") && args.length > 2) {
+                        if (plugin.getServer().getPluginManager().isPluginEnabled("Vault") && plugin.getConfig().getBoolean("use_economy") && args.length > 2) {
                             double purse = Double.parseDouble(args[2]);
                             if (Quickdraw.economy.getBalance(player.getName()) < purse) {
                                 player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "You don't have enough money to make that challenge!");
@@ -171,7 +170,6 @@ public class QuickdrawCommands implements CommandExecutor {
                             vz = cLoc.getBlockZ();
                             break;
                     }
-                    plugin.debug("x: " + vx + ", z:" + vz);
                     final Location vLoc = new Location(cLoc.getWorld(), vx, cLoc.getY(), vz, vYaw, 0);
                     challenger.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Teleporting your opponent into position...");
                     player.sendMessage(QuickdrawConstants.MY_PLUGIN_NAME + "Teleporting you into position...");

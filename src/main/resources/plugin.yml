@@ -14,5 +14,5 @@ commands:
   quickdraw:
     aliases: [qd,cb,cowboy]
     permissions: quickdraw.draw
-    description: View the QuickDraw best times.
-    usage: /<command> [invite|accept|stats] [player] [money amount]
+    description: Play the part of a cowboy!
+    usage: /<command> [invite|accept|decline|stats] [player] [money amount]

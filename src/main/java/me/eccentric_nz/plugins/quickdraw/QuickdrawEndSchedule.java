@@ -18,17 +18,13 @@ public class QuickdrawEndSchedule implements Runnable {
 
         // if one of the players missed...
         if (plugin.drawtime.containsKey(challenger)) {
-            plugin.debug("The challenger missed...");
             plugin.challengers.remove(pNameStr);
             plugin.quicktime.put(pNameStr, Long.MAX_VALUE);
         }
         if (plugin.drawtime.containsKey(versus)) {
-            plugin.debug("The invited missed...");
             plugin.accepted.remove(pNameStr);
             plugin.quicktime.put(pNameStr, Long.MAX_VALUE);
         }
-        plugin.debug("Challenger was: " + challenger + ", Versus was: " + versus);
-        plugin.debug("C: " + plugin.quicktime.get(challenger) + ", V: " + plugin.quicktime.get(versus));
         // find out who won
         if (plugin.quicktime.get(versus) > plugin.quicktime.get(challenger)) {
             // Challenger won
