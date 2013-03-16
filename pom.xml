@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.eccentric_nz.plugins.quickdraw</groupId>
     <artifactId>QuickDraw</artifactId>
-    <version>1.0</version>
+    <version>1.0.2</version>
     <name>QuickDraw</name>
     <url>http://dev.bukkit.org/server-mods/quickdraw/</url>
     <repositories>
@@ -32,14 +32,14 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.4.5-R0.3-SNAPSHOT</version>
+            <version>1.5-R0.1-SNAPSHOT</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>ci.herocraftonline.com</groupId>
             <artifactId>vault</artifactId>
-            <version>1.2.20</version>
+            <version>1.2.24</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
